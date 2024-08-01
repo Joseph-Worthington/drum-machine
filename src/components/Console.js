@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Button from '../utility/Button'
 import SoundBar from '../utility/SoundBar'
+import Control from '../utility/Control'
 
 const Console = () => {
 	const [volume, setVolume] = useState(0.5)
@@ -83,19 +84,28 @@ const Console = () => {
 		setVolume(e.target.valueAsNumber)
 	}
 
+	const muteOnClick = () => {
+		if(volume  === 0){
+			setVolume(0.5)
+		}else{
+			setVolume(0)
+		}
+	}
+
   return (
     <div id="drum-machine" className="bg-slate-900 p-10">
       <div className="button-grid grid grid-cols-3 gap-5">
         {buttons.map((key) => (
           <Button
-            key={key.key}
-            buttonKey={key.key}
-            audio={key['audio-file']}
-            buttonPress={resolveButtonPress}
+            key					={key.key}
+            buttonKey		={key.key}
+            audio				={key['audio-file']}
+            buttonPress	={resolveButtonPress}
           />
         ))}
       </div>
 			<div className='drum-controls'>
+				<Control onClick={muteOnClick} />
 				<SoundBar value={volume} onChange={volumeChange}/>
 				<p className='text-white'>{volume * 100}</p>
 			</div>
