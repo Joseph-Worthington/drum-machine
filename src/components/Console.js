@@ -5,6 +5,7 @@ import Control from '../utility/Control'
 
 const Console = () => {
 	const [volume, setVolume] = useState(0.5)
+	const [previousVolume, setPreviousVolume ] = useState()
 
 	const buttons = [
 		{
@@ -85,8 +86,9 @@ const Console = () => {
 	}
 
 	const muteOnClick = () => {
+		setPreviousVolume(volume);
 		if(volume  === 0){
-			setVolume(0.5)
+			setVolume(previousVolume)
 		}else{
 			setVolume(0)
 		}
