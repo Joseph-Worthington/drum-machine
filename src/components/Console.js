@@ -9,49 +9,49 @@ const Console = () => {
 
 	const buttons = [
 		{
-			'key'					: 'Q',
-			'audio-file'	: 'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-1.mp3',
-			'name'				: 'Heater 1'
+			'key'							: 'Q',
+			'audio-file'			: 'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-1.mp3',
+			'name'						: 'Heater 1',
 		},
 		{
-			'key'					: 'W',
-			'audio-file'	: 'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-2.mp3',
-			'name'				: 'Heater 2'
+			'key'							: 'W',
+			'audio-file'			: 'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-2.mp3',
+			'name'						: 'Heater 2',
 		},
 		{
-			'key'					: 'E',
-			'audio-file'	: 'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-3.mp3',
-			'name'				: 'Heater 3'
+			'key'							: 'E',
+			'audio-file'			: 'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-3.mp3',
+			'name'						: 'Heater 3',
 		},
 		{
-			'key'					: 'A',
-			'audio-file'	:  'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-4_1.mp3',
-			'name'				: 'Heater 4'
+			'key'							: 'A',
+			'audio-file'			:  'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-4_1.mp3',
+			'name'						: 'Heater 4',
 		},
 		{
-			'key'					: 'S',
-			'audio-file'	:  'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-6.mp3',
-			'name'				: 'Clap'
+			'key'							: 'S',
+			'audio-file'			:  'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-6.mp3',
+			'name'						: 'Clap',
 		},
 		{
-			'key'					: 'D',
-			'audio-file'	:  'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Dsc_Oh.mp3',
-			'name'				: 'Open-HH'
+			'key'							: 'D',
+			'audio-file'			:  'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Dsc_Oh.mp3',
+			'name'						: 'Open-HH',
 		},
 		{
-			'key'					: 'Z',
-			'audio-file'	:  'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Kick_n_Hat.mp3',
-			'name'				: 'Kick-n\'-Hat'
+			'key'							: 'Z',
+			'audio-file'			:  'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Kick_n_Hat.mp3',
+			'name'						: 'Kick-n\'-Hat',
 		},
 		{
-			'key'					: 'X',
-			'audio-file'	:  'https://cdn.freecodecamp.org/testable-projects-fcc/audio/RP4_KICK_1.mp3',
-			'name'				: 'Kick'
+			'key'							: 'X',
+			'audio-file'			:  'https://cdn.freecodecamp.org/testable-projects-fcc/audio/RP4_KICK_1.mp3',
+			'name'						: 'Kick',
 		},
 		{
-			'key'					: 'C',
-			'audio-file'	:  'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Cev_H2.mp3',
-			'name'				: 'Closed-HH'
+			'key'							: 'C',
+			'audio-file'			: 'https://cdn.freecodecamp.org/testable-projects-fcc/audio/Cev_H2.mp3',
+			'name'						: 'Closed-HH',
 		}
 	]
 
@@ -60,10 +60,17 @@ const Console = () => {
 	})
 
 	const onKeyClick = (e) => {
+		const key = e.key.toUpperCase();
 		buttons.map(
 			(button) => {
-				if(button.key === e.key.toUpperCase()){
-					return playAudioFile(button['audio-file'])
+				if(button.key === key){
+					let buttonClicked = document.getElementById(`button-${key}`)
+					buttonClicked.classList.add('bg-slate-400')
+					playAudioFile(button['audio-file']);
+					setTimeout(() => {
+						buttonClicked.classList.remove('bg-slate-400')
+					}, 150)
+					return '';
 				}else{
 					return '';
 				}
@@ -95,8 +102,8 @@ const Console = () => {
 	}
 
   return (
-    <div id="drum-machine" className="bg-slate-900 p-10">
-      <div className="button-grid grid grid-cols-3 gap-5">
+    <div id="drum-machine" className="bg-slate-900 p-10 grid grid-cols-2 gap-20 m-[10vw]d">
+      <div className="button-grid grid grid-cols-3 gap-5 min-w-fit">
         {buttons.map((key) => (
           <Button
             key					={key.key}
@@ -106,10 +113,9 @@ const Console = () => {
           />
         ))}
       </div>
-			<div className='drum-controls'>
+			<div className='drum-controls flex justify-center items-center flex-col gap-10 bg-slate-600 min-w-fit py-20'>
 				<Control onClick={muteOnClick} />
 				<SoundBar value={volume} onChange={volumeChange}/>
-				<p className='text-white'>{volume * 100}</p>
 			</div>
     </div>
   );
