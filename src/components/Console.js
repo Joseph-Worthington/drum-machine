@@ -2,10 +2,12 @@ import React, {useEffect, useState} from 'react';
 import Button from '../utility/Button'
 import SoundBar from '../utility/SoundBar'
 import Control from '../utility/Control'
+import Display from './Display';
 
 const Console = () => {
 	const [volume, setVolume] = useState(0.5)
-	const [previousVolume, setPreviousVolume ] = useState()
+	const [previousVolume, setPreviousVolume] = useState()
+	const [displayValue, setDisplayValue] = useState('')
 
 	const buttons = [
 		{
@@ -64,9 +66,10 @@ const Console = () => {
 		buttons.map(
 			(button) => {
 				if(button.key === key){
-					let buttonClicked = document.getElementById(`button-${key}`)
+					let buttonClicked = document.getElementById(key)
 					buttonClicked.classList.add('bg-slate-400')
 					playAudioFile(button['audio-file']);
+					changeDisplay(button['name'])
 					setTimeout(() => {
 						buttonClicked.classList.remove('bg-slate-400')
 					}, 150)
@@ -80,12 +83,26 @@ const Console = () => {
 
 	const resolveButtonPress = (e) => {
 		playAudioFile(e.target.firstElementChild.currentSrc)
+		buttons.map(
+			(button) => {
+				if(button.key === e.target.id){
+					changeDisplay(button['name'])
+					return '';
+				}else{
+					return '';
+				}
+			}
+		)
 	}
 
 	const playAudioFile = (audioFile) => {
 		let audio = new Audio(audioFile)
 		audio.volume = volume;
 		audio.play()
+	}
+
+	const changeDisplay = (nameValue) => {
+		setDisplayValue(nameValue)
 	}
 
 	const volumeChange = (e) => {
@@ -115,6 +132,7 @@ const Console = () => {
       </div>
 			<div className='drum-controls flex justify-center items-center flex-col gap-10 bg-slate-600 min-w-fit py-20'>
 				<Control onClick={muteOnClick} />
+				<Display value={displayValue} />
 				<SoundBar value={volume} onChange={volumeChange}/>
 			</div>
     </div>
