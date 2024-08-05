@@ -8,6 +8,7 @@ const Console = () => {
 	const [volume, setVolume] = useState(0.5)
 	const [previousVolume, setPreviousVolume] = useState()
 	const [displayValue, setDisplayValue] = useState('')
+	const [muteText, setMuteText] = useState('On')
 
 	const buttons = [
 		{
@@ -66,17 +67,16 @@ const Console = () => {
 		buttons.map(
 			(button) => {
 				if(button.key === key){
+					playAudioFile(button['audio-file']);
+					changeDisplay(button['name']);
 					let buttonClicked = document.getElementById(key)
 					buttonClicked.classList.add('bg-slate-400')
-					playAudioFile(button['audio-file']);
-					changeDisplay(button['name'])
 					setTimeout(() => {
 						buttonClicked.classList.remove('bg-slate-400')
 					}, 150)
-					return '';
-				}else{
-					return '';
+
 				}
+				return '';
 			}
 		)
 	}
@@ -96,6 +96,7 @@ const Console = () => {
 	}
 
 	const playAudioFile = (audioFile) => {
+		console.log(audioFile)
 		let audio = new Audio(audioFile)
 		audio.volume = volume;
 		audio.play()
@@ -113,29 +114,34 @@ const Console = () => {
 		setPreviousVolume(volume);
 		if(volume  === 0){
 			setVolume(previousVolume)
+			setMuteText('On')
 		}else{
 			setVolume(0)
+			setMuteText('Off')
 		}
 	}
 
   return (
-    <div id="drum-machine" className="bg-slate-900 p-10 grid grid-cols-2 gap-20 m-[10vw]d">
-      <div className="button-grid grid grid-cols-3 gap-5 min-w-fit">
-        {buttons.map((key) => (
-          <Button
-            key					={key.key}
-            buttonKey		={key.key}
-            audio				={key['audio-file']}
-            buttonPress	={resolveButtonPress}
-          />
-        ))}
-      </div>
-			<div className='drum-controls flex justify-center items-center flex-col gap-10 bg-slate-600 min-w-fit py-20'>
-				<Control onClick={muteOnClick} />
-				<Display value={displayValue} />
-				<SoundBar value={volume} onChange={volumeChange}/>
+		<div className='bg-slate-900 p-10 m-[10vw]'>
+			<h1 className='text-5xl text-slate-50 pb-10'>Drum Machine</h1>
+			<div id="drum-machine" className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+				<div className="button-grid grid grid-cols-3 gap-5 min-w-fit">
+					{buttons.map((key) => (
+						<Button
+							key					={key.key}
+							buttonKey		={key.key}
+							audio				={key['audio-file']}
+							buttonPress	={resolveButtonPress}
+						/>
+					))}
+				</div>
+				<div className='drum-controls flex justify-center items-center flex-col gap-10 bg-slate-600 min-w-fit py-20'>
+					<Control onClick={muteOnClick} value={muteText} />
+					<Display value={displayValue} />
+					<SoundBar value={volume} onChange={volumeChange}/>
+				</div>
 			</div>
-    </div>
+		</div>
   );
 };
 
