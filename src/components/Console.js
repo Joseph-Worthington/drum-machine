@@ -9,6 +9,7 @@ const Console = () => {
 	const [previousVolume, setPreviousVolume] = useState()
 	const [displayValue, setDisplayValue] = useState('')
 	const [muteText, setMuteText] = useState('On')
+	const [lastElementPlayed, setLastElementPlayed] = useState('')
 
 	const buttons = [
 		{
@@ -60,19 +61,27 @@ const Console = () => {
 
 	useEffect(() => {
 		document.addEventListener('keydown', onKeyClick, true)
-	})
+
+		return () => {
+			document.removeEventListener('keydown', onKeyClick)
+		}
+	}, [])
 
 	const onKeyClick = (e) => {
 		const key = e.key.toUpperCase();
 		buttons.map(
 			(button) => {
 				if(button.key === key){
-					playAudioFile(button['audio-file']);
+
+					let audioClicked = document.getElementById(key)
+					let buttonClicked = document.getElementById(`button-${key}`)
+
+					playAudioFile(audioClicked);
 					changeDisplay(button['name']);
-					let buttonClicked = document.getElementById(key)
-					buttonClicked.classList.add('bg-slate-400')
+					
+					buttonClicked.classList.add('active')
 					setTimeout(() => {
-						buttonClicked.classList.remove('bg-slate-400')
+						buttonClicked.classList.remove('active')
 					}, 150)
 
 				}
@@ -82,10 +91,11 @@ const Console = () => {
 	}
 
 	const resolveButtonPress = (e) => {
-		playAudioFile(e.target.firstElementChild.currentSrc)
+		let buttonClicked = e.target.firstElementChild;
+		playAudioFile(buttonClicked)
 		buttons.map(
 			(button) => {
-				if(button.key === e.target.id){
+				if('button-' + button.key === e.target.id){
 					changeDisplay(button['name'])
 					return '';
 				}else{
@@ -95,11 +105,13 @@ const Console = () => {
 		)
 	}
 
-	const playAudioFile = (audioFile) => {
-		console.log(audioFile)
-		let audio = new Audio(audioFile)
-		audio.volume = volume;
-		audio.play()
+	const playAudioFile = (element) => {
+		if(lastElementPlayed)
+			lastElementPlayed.pause();
+
+		setLastElementPlayed(element);
+		element.volume = volume;
+		element.play()
 	}
 
 	const changeDisplay = (nameValue) => {
